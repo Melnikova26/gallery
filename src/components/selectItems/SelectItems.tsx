@@ -3,6 +3,7 @@ import SelectItem from "../selectItem/SelectItem";
 import st from './SelectItems.module.scss';
 import { getAuthors, getLocations, getPaintings } from "../../services/fetcher";
 import SelectCreatedItem from "../selectCreatedItem/SelectCreatedItem";
+import useInfoQuery from "../../hooks/useInfoQuery";
 export interface ISelectValues {
     value: string;
     label: string;
@@ -16,35 +17,8 @@ export interface ILocation {
     location: string;
 }
 
-// const authors: ISelectValues[] = [
-//     { value: 'chocolate', label: 'Chocolate' },
-//     { value: 'strawberry', label: 'Strawberry' },
-//     { value: 'vanilla', label: 'Vanilla' }
-//   ]
-//   const locations: ISelectValues[] = [
-//     { value: 'chocolate', label: 'Chocolate' },
-//     { value: 'strawberry', label: 'Strawberry' },
-//     { value: 'vanilla', label: 'Vanilla' }
-//   ]
-  
-
 const SelectItems = () => {
-    const {data: authors} = useQuery({
-        queryFn: () => getAuthors(),
-        queryKey: ['authors'],
-    });
-    console.log(authors);
-
-    const {data: locations} = useQuery({
-        queryFn: () => getLocations(),
-        queryKey: ['locations'],
-    });
-    console.log(locations);
-
-    const {data: paintings} = useQuery({
-        queryFn: () => getPaintings(),
-        queryKey: ['paintings'],
-    });
+    const {authors, locations} = useInfoQuery()
 
     const authorsArray = authors?.map((author: IAuthor) => {
         return {value: author.name, label: author.name}

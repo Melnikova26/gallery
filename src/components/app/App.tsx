@@ -8,14 +8,11 @@ export enum Theme {
     light = 'light',
     dark = 'dark',
 }
+
 function App() {
     const [theme, setTheme] = useState<string>(Theme.light);
 
-    const { paintings, authors, isLoading, isSuccess } = useInfoQuery();
-
-  useEffect( ()=> {
-    isSuccess && console.log(authors);
-  })
+    const { authors, isLoading, isSuccess, currentPage } = useInfoQuery();
 
   if (isLoading) return <h1>isLoading...</h1>
   return (
@@ -23,7 +20,7 @@ function App() {
         <div className={st.app}>
             <Header theme={theme} setTheme={setTheme}/>
             <SelectItems/>
-            <Cards/>
+            <Cards currentPage={currentPage}/>
         </div>
     </div>
     

@@ -15,5 +15,8 @@
             font-size: 0.8125rem;
             font-weight: 400;
         }
+        &:focus, &:active {
+            outline: 1px solid #000;
+        }
     }
 }
