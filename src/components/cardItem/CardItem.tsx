@@ -1,10 +1,14 @@
 import st from './CardItem.module.scss';
 
-const CardItem = () => {
+interface ICardType {
+    imageUrl: string;
+    name: string;
+}
+const CardItem: React.FC<ICardType> = ({imageUrl, name}) => {
     return (
         <div className={st.card}>
-            <img src='./painting.png' alt="Image" />
-            <div className={st.name}>The Starry Night</div>
+            <img src={imageUrl} alt={name} />
+            <div className={st.name}>{name}</div>
         </div>
     );
 }

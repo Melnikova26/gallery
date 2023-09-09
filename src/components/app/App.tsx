@@ -3,8 +3,7 @@ import st from './App.module.scss';
 import Header from "../header/Header";
 import SelectItems from "../selectItems/SelectItems";
 import Cards from "../cards/Cards";
-import axios from 'axios';
-
+import useInfoQuery from "../../hooks/useInfoQuery";
 export enum Theme {
     light = 'light',
     dark = 'dark',
@@ -12,26 +11,16 @@ export enum Theme {
 function App() {
     const [theme, setTheme] = useState<string>(Theme.light);
 
-async function fetchArtists() {
-    try {
-      const response = await axios.get('https://test-front.framework.team/authors');
-      return response.data;
-    } catch (error) {
-      console.error('Произошла ошибка при получении данных о художниках:', error);
-      throw error;
-    }
-  }
-  const getData = async ()=> {
-    const data = await fetchArtists();
-    console.log(data);
-  }
+    const { paintings, authors, isLoading, isSuccess } = useInfoQuery();
+
   useEffect( ()=> {
-    getData();
+    isSuccess && console.log(authors);
   })
 
+  if (isLoading) return <h1>isLoading...</h1>
   return (
-    <div className={st.app}>
-        <div className={theme === Theme.light ? st.containerLight : st.containerDark}>
+    <div className={theme === Theme.light ? st.containerLight : st.containerDark}>
+        <div className={st.app}>
             <Header theme={theme} setTheme={setTheme}/>
             <SelectItems/>
             <Cards/>
