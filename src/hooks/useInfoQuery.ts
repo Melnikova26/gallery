@@ -1,9 +1,16 @@
 import { useQuery } from "react-query";
 import { getAuthors, getLocations, getPaintings } from "../services/fetcher";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { ParamsType } from "../services/fetcher";
 
 const useInfoQuery = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [filters, setFilters] = useState<ParamsType>();
+
+  useEffect(() => {
+    console.log("хук", filters);
+  }, [filters]);
+
   const limit = 12;
 
   const { data: authors } = useQuery({
@@ -16,10 +23,12 @@ const useInfoQuery = () => {
     data: paintings,
     isLoading,
     isSuccess,
+    isPreviousData,
   } = useQuery({
-    queryFn: () => getPaintings(currentPage, limit),
-    queryKey: ["paintings", currentPage],
+    queryFn: () => getPaintings(currentPage, limit, filters),
+    queryKey: ["paintings", filters, currentPage],
     staleTime: 1000 * 5,
+    keepPreviousData: true,
   });
 
   const { data: locations } = useQuery({
@@ -37,6 +46,9 @@ const useInfoQuery = () => {
     isSuccess,
     currentPage,
     setCurrentPage,
+    isPreviousData,
+    filters,
+    setFilters,
   };
 };
 

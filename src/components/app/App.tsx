@@ -4,6 +4,7 @@ import Header from "../header/Header";
 import SelectItems from "../selectItems/SelectItems";
 import Cards from "../cards/Cards";
 import useInfoQuery from "../../hooks/useInfoQuery";
+import Pagination from "../pagination/Pagination";
 export enum Theme {
   light = "light",
   dark = "dark",
@@ -12,7 +13,11 @@ export enum Theme {
 function App() {
   const [theme, setTheme] = useState<string>(Theme.light);
 
-  const { authors, isLoading, isSuccess, currentPage } = useInfoQuery();
+  const { authors, isLoading, isSuccess, currentPage, setCurrentPage } =
+    useInfoQuery();
+  useEffect(() => {
+    console.log(currentPage);
+  }, [currentPage]);
 
   if (isLoading) return <h1>isLoading...</h1>;
   return (
@@ -22,7 +27,7 @@ function App() {
       <div className={st.app}>
         <Header theme={theme} setTheme={setTheme} />
         <SelectItems />
-        <Cards currentPage={currentPage} />
+        {/* <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} /> */}
       </div>
     </div>
   );

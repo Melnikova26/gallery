@@ -5,14 +5,19 @@ import Select, {
 } from "react-select";
 import { ISelectValues } from "../selectItems/SelectItems";
 import st from "./SelectItem.module.scss";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 
 interface ISelectItemProps {
   name: string;
   options: ISelectValues[];
+  handleChangeFunc: (value: string) => void;
 }
 
-const SelectItem: React.FC<ISelectItemProps> = ({ name, options }) => {
+const SelectItem: React.FC<ISelectItemProps> = ({
+  name,
+  options,
+  handleChangeFunc,
+}) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const DropdownIndicator: React.FC<DropdownIndicatorProps> = (props) => (
     <components.DropdownIndicator {...props}>
@@ -109,6 +114,10 @@ const SelectItem: React.FC<ISelectItemProps> = ({ name, options }) => {
         options={options}
         onMenuOpen={() => setIsDropdownOpen(true)}
         onMenuClose={() => setIsDropdownOpen(false)}
+        onChange={(newValue: unknown, actionMeta) => {
+          const selectedOption = newValue as { value: string; label: string };
+          handleChangeFunc(selectedOption.value);
+        }}
       />
     </>
   );

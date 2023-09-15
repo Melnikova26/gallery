@@ -1,10 +1,11 @@
-import { useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import CardItem from "../cardItem/CardItem";
 import st from "./Cards.module.scss";
-import { baseURL } from "../../services/fetcher";
+import { ParamsType, baseURL, getPaintings } from "../../services/fetcher";
 import useInfoQuery from "../../hooks/useInfoQuery";
+import { useEffect } from "react";
 
-interface IPaintingsType {
+export interface IPaintingsType {
   authorId: number;
   created: string;
   id: number;
@@ -12,25 +13,35 @@ interface IPaintingsType {
   locationId: number;
   name: string;
 }
+
 interface ICardsProps {
   currentPage: number;
+  limit: number;
+  filters?: ParamsType;
 }
 
-const Cards: React.FC<ICardsProps> = ({ currentPage }) => {
-  // const client = useQueryClient();
-  // const paintingsData: IPaintingsType[] | undefined = client.getQueryData(['paintings', currentPage]);
+const Cards: React.FC<ICardsProps> = ({ currentPage, limit, filters }) => {
+  useEffect(() => {
+    console.log("hi", filters);
+  }, [filters]);
 
-  const { paintings } = useInfoQuery();
+  const { data: paintings, isLoading } = useQuery(
+    ["paintings", currentPage, filters],
+    () => getPaintings(currentPage, limit, filters),
+    {
+      staleTime: 1000 * 5,
+    }
+  );
+
+  if (isLoading) {
+    return <div>...Loading</div>;
+  }
 
   return (
     <main className={st.main}>
       {paintings &&
-        paintings.map((painting: IPaintingsType) => (
-          <CardItem
-            key={painting.id}
-            imageUrl={`${baseURL}/${painting.imageUrl}`}
-            name={painting.name}
-          />
+        paintings.data.map((painting: IPaintingsType) => (
+          <CardItem key={painting.id} {...painting} />
         ))}
     </main>
   );
