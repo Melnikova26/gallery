@@ -1,5 +1,5 @@
 .select_close {
-  width: 16.5625rem;
+  // width: 16.5625rem;
   height: 2.8125rem;
   padding: 0.94rem;
   display: flex;
@@ -7,11 +7,10 @@
   align-items: center;
   border-radius: 0.5rem;
   border: 1px solid rgba(0, 0, 0, 0.3);
-  position: relative;
   transition: all 0.2s ease;
 }
 .select_open {
-  width: 16.5625rem;
+  // width: 16.5625rem;
   height: 2.8125rem;
   padding: 0.94rem;
   display: flex;
@@ -22,8 +21,10 @@
   border-bottom-right-radius: 0;
   border: 1px solid #000;
   border-bottom: none;
-  position: relative;
   transition: all 0.2s ease;
+}
+.filters {
+  position: relative;
 }
 .dropDown {
   display: flex;
@@ -34,19 +35,20 @@
   color: #000;
 }
 .menu {
-  width: 100.7%;
+  width: 100%;
   height: fit-content;
-  padding: 1.31rem;
+  padding: 1.25rem 1.3rem;
   position: absolute;
-  bottom: -100%;
+  bottom: -99%;
   display: flex;
+  flex-wrap: wrap;
   gap: 0.63rem;
   justify-content: space-between;
   align-items: center;
   background-color: #fff;
   border: 1px solid #000;
   top: 100%;
-  left: -1px;
+  left: 0;
   border-top: none;
   border-bottom-left-radius: 0.5rem;
   border-bottom-right-radius: 0.5rem;
@@ -55,7 +57,8 @@
 }
 .from,
 .to {
-  max-width: 4.9375rem;
+  min-width: 5.9rem;
+  max-width: 6.875rem;
   height: 2.8125rem;
   padding: 0.94rem;
   border: none;
@@ -67,4 +70,15 @@
   height: 0.0625rem;
   padding: 0.03125rem 0.375rem;
   background-color: #000;
+}
+@media (max-width: 1380px) {
+  .menu {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 378px) {
+  .menu {
+    flex-direction: row;
+  }
 }

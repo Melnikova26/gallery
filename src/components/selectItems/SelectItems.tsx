@@ -1,12 +1,18 @@
 import { useQuery, useQueryClient } from "react-query";
 import SelectItem from "../selectItem/SelectItem";
 import st from "./SelectItems.module.scss";
-import { getAuthors, getLocations, getPaintings } from "../../services/fetcher";
+import {
+  getAllPaintings,
+  getAuthors,
+  getLocations,
+  getPaintings,
+} from "../../services/fetcher";
 import SelectCreatedItem from "../selectCreatedItem/SelectCreatedItem";
 import useInfoQuery from "../../hooks/useInfoQuery";
 import { ChangeEvent, ChangeEventHandler, useEffect, useState } from "react";
 import { IPaintingsType } from "../cards/Cards";
 import Pagination from "../pagination/Pagination";
+import ClearSelect from "../customClearIndicator/CustomClearIndicator";
 export interface ISelectValues {
   value: string;
   label: string;
@@ -32,21 +38,24 @@ const SelectItems = () => {
     locations,
     setFilters,
     filters,
-    paintings,
     currentPage,
     setCurrentPage,
+    limit,
+    allPaintings,
   } = useInfoQuery();
 
-  const queryClient = useQueryClient();
+  const { data: paintings } = useQuery({
+    queryFn: () => getPaintings(currentPage, limit, filters),
+    queryKey: ["paintings", filters],
+    staleTime: 1000 * 5,
+    keepPreviousData: true,
+  });
 
-  useEffect(() => {
-    queryClient.invalidateQueries(["paintings", currentPage, filters]);
-    console.log("это с select", filters);
-  }, [filters]);
+  const totalPaintings = paintings?.totalPaintings || 0;
 
   const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     const paintingName: string = event.target.value.trim();
-    const foundPainting = paintings.find(
+    const foundPainting = allPaintings.find(
       (painting: IPaintingsType) =>
         painting.name.toLowerCase() === paintingName.toLowerCase()
     );
@@ -55,27 +64,49 @@ const SelectItems = () => {
         ...prevFilter,
         name: foundPainting.name,
       }));
+      setCurrentPage(1);
+    }
+    if (paintingName.trim().length === 0) {
+      setFilters((prevFilter) => ({
+        ...prevFilter,
+        name: undefined,
+      }));
     }
   };
 
-  const handleAuthorChange = (value: string) => {
-    const selectedAuthorID: number = authors.find(
-      (author: IAuthor) => author.name === value
-    ).id;
-    setFilters((prevFilter) => ({
-      ...prevFilter,
-      authorId: selectedAuthorID,
-    }));
+  const handleAuthorChange = (value: string | null) => {
+    if (value !== null) {
+      const selectedAuthorID: number = authors.find(
+        (author: IAuthor) => author.name === value
+      ).id;
+      setFilters((prevFilter) => ({
+        ...prevFilter,
+        authorId: selectedAuthorID,
+      }));
+      setCurrentPage(1);
+    } else {
+      setFilters((prevFilter) => ({
+        ...prevFilter,
+        authorId: undefined,
+      }));
+    }
   };
 
-  const handleLocationChange = (value: string) => {
-    const selectedLocationID: number = locations.find(
-      (location: ILocation) => location.location === value
-    ).id;
-    setFilters((prevFilter) => ({
-      ...prevFilter,
-      locationId: selectedLocationID,
-    }));
+  const handleLocationChange = (value: string | null) => {
+    if (value !== null) {
+      const selectedLocationID: number = locations.find(
+        (location: ILocation) => location.location === value
+      ).id;
+      setFilters((prevFilter) => ({
+        ...prevFilter,
+        locationId: selectedLocationID,
+      }));
+    } else {
+      setFilters((prevFilter) => ({
+        ...prevFilter,
+        locationId: undefined,
+      }));
+    }
   };
 
   const authorsArray =
@@ -114,6 +145,7 @@ const SelectItems = () => {
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
         filters={filters}
+        totalPaintings={totalPaintings}
       />
     </>
   );

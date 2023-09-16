@@ -4,18 +4,21 @@ import PageButton from "../pageButton/PageButton";
 import Cards from "../cards/Cards";
 import { ParamsType, baseURL, getPaintings } from "../../services/fetcher";
 import st from "./Pagination.module.scss";
+import Spinner from "../spinner/Spinner";
 
 interface IPaginationProps {
   currentPage: number;
   filters?: ParamsType;
   setCurrentPage: Function;
+  totalPaintings: number;
 }
 const Pagination: React.FC<IPaginationProps> = ({
   currentPage,
   setCurrentPage,
   filters,
+  totalPaintings,
 }) => {
-  const { totalPaintings, limit, isPreviousData, isLoading } = useInfoQuery();
+  const { limit, isPreviousData, isLoading } = useInfoQuery();
 
   const totalPage = useMemo(
     () => totalPaintings && Math.ceil(totalPaintings / limit),
@@ -55,7 +58,12 @@ const Pagination: React.FC<IPaginationProps> = ({
       </button>
 
       {pagesArray.map((page: number) => (
-        <PageButton key={page} page={page} setCurrentPage={setCurrentPage} />
+        <PageButton
+          key={page}
+          page={page}
+          clazz={`${currentPage === page ? st.active_page : ""}`}
+          setCurrentPage={setCurrentPage}
+        />
       ))}
       <button
         className={st.btn_arrow}
@@ -76,7 +84,7 @@ const Pagination: React.FC<IPaginationProps> = ({
 
   return (
     <>
-      {isLoading && <span className="loading">Loading...</span>}
+      {isLoading && <Spinner />}
       <Cards currentPage={currentPage} limit={limit} filters={filters} />
       {nav}
     </>

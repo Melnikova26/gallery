@@ -4,6 +4,7 @@ import st from "./Cards.module.scss";
 import { ParamsType, baseURL, getPaintings } from "../../services/fetcher";
 import useInfoQuery from "../../hooks/useInfoQuery";
 import { useEffect } from "react";
+import Spinner from "../spinner/Spinner";
 
 export interface IPaintingsType {
   authorId: number;
@@ -34,7 +35,7 @@ const Cards: React.FC<ICardsProps> = ({ currentPage, limit, filters }) => {
   );
 
   if (isLoading) {
-    return <div>...Loading</div>;
+    return <Spinner />;
   }
 
   return (

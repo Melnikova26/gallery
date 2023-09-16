@@ -1,9 +1,8 @@
 .selectsDisplay {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 1.25rem;
   & .input {
-    width: 16.5625rem;
-    max-width: 16.5625rem;
     height: 45px;
     max-height: 45px;
     padding: 16px 15px 14px;
