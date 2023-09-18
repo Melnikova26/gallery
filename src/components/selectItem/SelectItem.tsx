@@ -4,6 +4,7 @@ import st from "./SelectItem.module.scss";
 import { useState } from "react";
 import CustomClearIndicator from "../customClearIndicator/CustomClearIndicator";
 import DropdownIndicator from "../dropdownIndicator/DropdownIndicator";
+import { Theme, useTheme } from "../../context/ThemeContext";
 
 interface ISelectItemProps {
   name: string;
@@ -18,20 +19,26 @@ const SelectItem: React.FC<ISelectItemProps> = ({
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+  const { theme, lightThemeThenBlack, lightThemeThenWhite } = useTheme();
+
   const customStyles: StylesConfig = {
     control: (provided, state) => ({
       ...provided,
-      background: "#fff",
+      backgroundColor: lightThemeThenWhite,
       borderRadius: state.menuIsOpen ? "0.5rem 0.5rem 0 0" : "0.5rem",
       border:
         state.isFocused || state.menuIsOpen
-          ? "1px solid #000!important"
-          : "1px solid rgba(0, 0, 0, .30)",
-      borderBottom: "1px solid rgba(0, 0, 0, 0.30)",
+          ? `1px solid ${lightThemeThenBlack}!important`
+          : `1px solid ${
+              theme === Theme.light ? "rgba(0, 0, 0, .30)" : "#fff"
+            }`,
+      borderBottom: `1px solid ${
+        theme === Theme.light ? "rgba(0, 0, 0, .30)" : "#fff"
+      }`,
       boxShadow: state.isFocused && state.menuIsOpen ? "" : "",
       height: "2.8125rem",
       fontSize: "0.8125rem",
-      color: "#000",
+      color: `${lightThemeThenBlack}`,
     }),
     indicatorSeparator: (provided) => ({
       ...provided,
@@ -40,11 +47,12 @@ const SelectItem: React.FC<ISelectItemProps> = ({
     menu: (provided) => ({
       ...provided,
       borderRadius: "0 0 0.5rem 0.5rem",
-      border: "1px solid #000",
-      borderColor: "#000",
+      border: `1px solid ${lightThemeThenBlack}`,
+      borderColor: `${lightThemeThenBlack}`,
       marginTop: 0,
       boxShadow: "none",
       borderTop: "0px",
+      backgroundColor: lightThemeThenWhite,
     }),
     menuList: (provided) => ({
       ...provided,
@@ -55,14 +63,35 @@ const SelectItem: React.FC<ISelectItemProps> = ({
       fontSize: "1rem",
       fontWeight: "500",
       lineHeight: "1.25rem",
-      backgroundColor: isFocused || isSelected ? "#000" : "transparent",
-      color: isFocused || isSelected ? "#fff" : "#000",
-      border: isFocused || isSelected ? "#fff" : "#000",
+      backgroundColor:
+        isFocused || isSelected ? lightThemeThenBlack : "transparent",
+      color:
+        isFocused || isSelected
+          ? `${lightThemeThenWhite}`
+          : `${lightThemeThenBlack}`,
+      border:
+        isFocused || isSelected ? lightThemeThenWhite : lightThemeThenBlack,
       padding: "0.62rem 1.88rem",
       "&:hover": {
-        backgroundColor: "#000",
-        color: "#fff",
+        backgroundColor: lightThemeThenBlack,
+        color: lightThemeThenWhite,
       },
+    }),
+    placeholder: (provided) => ({
+      ...provided,
+      color: lightThemeThenBlack,
+    }),
+    dropdownIndicator: (provided, state) => ({
+      ...provided,
+      padding: "0.2rem 0.94rem 0 0.62rem",
+    }),
+    clearIndicator: (provided) => ({
+      ...provided,
+      padding: "0",
+    }),
+    valueContainer: (provided) => ({
+      ...provided,
+      padding: "2px 10px 2px 15px",
     }),
   };
 

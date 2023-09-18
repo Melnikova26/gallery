@@ -5,16 +5,12 @@ import {
   getLocations,
   getPaintings,
 } from "../services/fetcher";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ParamsType } from "../services/fetcher";
 
 const useInfoQuery = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState<ParamsType>();
-
-  useEffect(() => {
-    console.log("хук", filters);
-  }, [filters]);
 
   const limit = 12;
 

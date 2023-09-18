@@ -8,33 +8,55 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1px solid #000;
     border-left: none;
     border-radius: none;
-    background-color: #fff;
     cursor: pointer;
-    // &:focus,
-    // &:active {
-    //   color: #fff;
-    //   background-color: #000;
-    // }
-    &:hover {
+    &.light {
       color: #000;
-      background-color: #ededed;
-    }
-    &:disabled {
-      color: rgba(0, 0, 0, 0.3);
-      border-color: rgba(0, 0, 0, 0.3);
-    }
-    &:first-child {
-      border-left: 1px solid #000;
+      border: 1px solid #000;
+      background-color: #fff;
+      &:hover {
+        color: #000;
+        background-color: #ededed;
+      }
       &:disabled {
-        border-left: 1px solid rgba(0, 0, 0, 0.3);
+        color: rgba(0, 0, 0, 0.3);
+        border-color: rgba(0, 0, 0, 0.3);
+      }
+      &:first-child {
+        border-left: 1px solid #000;
+        &:disabled {
+          border-left: 1px solid rgba(0, 0, 0, 0.3);
+        }
+      }
+      &:nth-child(2) {
+        &:disabled {
+          border-right-color: #000;
+        }
       }
     }
-    &:nth-child(2) {
+    &.dark {
+      color: #fff;
+      border: 1px solid #fff;
+      background-color: #000;
+      &:hover {
+        color: #fff;
+        background-color: #464646;
+      }
       &:disabled {
-        border-right-color: #000;
+        color: rgba(255, 255, 255, 0.3);
+        border-color: rgba(255, 255, 255, 0.3);
+      }
+      &:first-child {
+        border-left: 1px solid #fff;
+        &:disabled {
+          border-left: 1px solid rgba(255, 255, 255, 0.3);
+        }
+      }
+      &:nth-child(2) {
+        &:disabled {
+          border-right-color: #fff;
+        }
       }
     }
   }
@@ -49,18 +71,38 @@
   border-bottom-left-radius: 6px;
 }
 .btn_arrow {
-  &:disabled {
-    &:hover {
-      color: rgba(0, 0, 0, 0.3);
-      background-color: #fff;
+  &.light {
+    &:disabled {
+      &:hover {
+        color: rgba(0, 0, 0, 0.3);
+        background-color: #fff;
+      }
+    }
+  }
+  &.dark {
+    &:disabled {
+      &:hover {
+        color: rgba(255, 255, 255, 0.3);
+        background-color: #000;
+      }
     }
   }
 }
 .active_page {
-  color: #fff;
-  background-color: #000 !important;
-  &:hover {
+  &.light {
     color: #fff !important;
     background-color: #000 !important;
+    &:hover {
+      color: #fff !important;
+      background-color: #000 !important;
+    }
+  }
+  &.dark {
+    color: #000 !important;
+    background-color: #fff !important;
+    &:hover {
+      color: #000 !important;
+      background-color: #fff !important;
+    }
   }
 }

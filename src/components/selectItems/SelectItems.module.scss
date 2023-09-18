@@ -7,16 +7,28 @@
     max-height: 45px;
     padding: 16px 15px 14px;
     border-radius: 0.5rem !important;
-    border: 1px solid rgba(0, 0, 0, 0.3);
-
     &::placeholder {
-      color: rgba(0, 0, 0, 0.3);
       font-size: 0.8125rem;
       font-weight: 400;
     }
     &:focus,
     &:active {
-      outline: 1px solid #000;
+      outline: none;
     }
+  }
+}
+.light {
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  background-color: #fff;
+  &::placeholder {
+    color: rgba(0, 0, 0, 0.3);
+  }
+}
+
+.dark {
+  background-color: #0c0c0c;
+  border: 1px solid #fff;
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.3);
   }
 }

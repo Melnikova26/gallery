@@ -1,3 +1,4 @@
+import { useTheme } from "../../context/ThemeContext";
 import st from "./PageButton.module.scss";
 
 interface IPageButtonProps {

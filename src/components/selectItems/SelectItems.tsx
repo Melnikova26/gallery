@@ -1,18 +1,13 @@
 import { useQuery, useQueryClient } from "react-query";
 import SelectItem from "../selectItem/SelectItem";
 import st from "./SelectItems.module.scss";
-import {
-  getAllPaintings,
-  getAuthors,
-  getLocations,
-  getPaintings,
-} from "../../services/fetcher";
+import { getPaintings } from "../../services/fetcher";
 import SelectCreatedItem from "../selectCreatedItem/SelectCreatedItem";
 import useInfoQuery from "../../hooks/useInfoQuery";
-import { ChangeEvent, ChangeEventHandler, useEffect, useState } from "react";
+import { ChangeEvent } from "react";
 import { IPaintingsType } from "../cards/Cards";
 import Pagination from "../pagination/Pagination";
-import ClearSelect from "../customClearIndicator/CustomClearIndicator";
+import { Theme, useTheme } from "../../context/ThemeContext";
 export interface ISelectValues {
   value: string;
   label: string;
@@ -26,12 +21,6 @@ export interface ILocation {
   location: string;
 }
 
-interface newFilterType {
-  name?: string | undefined;
-  author?: string | undefined;
-  location?: string | undefined;
-}
-
 const SelectItems = () => {
   const {
     authors,
@@ -43,6 +32,8 @@ const SelectItems = () => {
     limit,
     allPaintings,
   } = useInfoQuery();
+
+  const { theme } = useTheme();
 
   const { data: paintings } = useQuery({
     queryFn: () => getPaintings(currentPage, limit, filters),
@@ -123,7 +114,9 @@ const SelectItems = () => {
     <>
       <div className={st.selectsDisplay}>
         <input
-          className={st.input}
+          className={`${st.input} ${
+            theme === Theme.light ? st.light : st.dark
+          }`}
           name="name"
           type="text"
           placeholder="Name"

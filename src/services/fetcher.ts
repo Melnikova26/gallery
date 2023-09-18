@@ -25,29 +25,11 @@ export const getLocations = async () => {
   return result.data;
 };
 
-// export const getPaintings = async (
-//   page: number,
-//   limit: number,
-//   filters?: ParamsType
-// ) => {
-//   const result = await client.get(`/paintings?_page=${page}&_limit=${limit}`, {
-//     params: filters,
-//   });
-//   const totalPaintings = parseInt(result.headers["x-total-count"], 10);
-//   return { data: result.data, totalPaintings };
-// };
-
 export const getAllPaintings = async () => {
   const result = await client.get("/paintings");
   return result.data;
 };
 
-// export const getPaintings = async (page: number, limit: number) => {
-
-//   const result = await client.get(`/paintings?_page=${page}&_limit=${limit}`);
-//   const totalPaintings = parseInt(result.headers["x-total-count"], 10);
-//   return { data: result.data, totalPaintings };
-// };
 export const getPaintings = async (
   page: number,
   limit: number,
