@@ -1,5 +1,6 @@
 .nav {
   margin-top: 2.5rem;
+  margin-bottom: 6.06rem;
   display: flex;
   justify-content: flex-start;
   button {
@@ -104,5 +105,25 @@
       color: #000 !important;
       background-color: #fff !important;
     }
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1365px) {
+  .nav {
+    margin-bottom: 3.88rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .nav {
+    margin-top: 2.19rem;
+    margin-bottom: 3.37rem;
+  }
+}
+
+@media (min-width: 320px) {
+  .nav {
+    margin-top: 1.88rem;
+    margin-bottom: 2.13rem;
   }
 }

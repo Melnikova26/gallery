@@ -111,3 +111,8 @@
     flex-direction: row;
   }
 }
+@media (min-width: 320px) and (max-width: 767px) {
+  .header {
+    font-size: 0.875rem;
+  }
+}

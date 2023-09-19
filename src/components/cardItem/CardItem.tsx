@@ -1,8 +1,6 @@
-import { useEffect } from "react";
 import useInfoQuery from "../../hooks/useInfoQuery";
 import { baseURL } from "../../services/fetcher";
-import { IPaintingsType } from "../cards/Cards";
-import { IAuthor, ILocation } from "../selectItems/SelectItems";
+import { IAuthor, ILocation, IPaintingsType } from "../../types";
 import st from "./CardItem.module.scss";
 
 const CardItem: React.FC<Omit<IPaintingsType, "id">> = ({
@@ -15,11 +13,11 @@ const CardItem: React.FC<Omit<IPaintingsType, "id">> = ({
   const { locations, authors } = useInfoQuery();
 
   const location: ILocation = locations.find(
-    (location: ILocation) => location.id === locationId
+    (location: ILocation) => location.id === locationId,
   );
 
   const author: IAuthor = authors.find(
-    (author: IAuthor) => author.id === authorId
+    (author: IAuthor) => author.id === authorId,
   );
 
   return (

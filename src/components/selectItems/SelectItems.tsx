@@ -1,27 +1,15 @@
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
+import { ChangeEvent, useCallback, useEffect } from "react";
 import SelectItem from "../selectItem/SelectItem";
 import st from "./SelectItems.module.scss";
 import { getPaintings } from "../../services/fetcher";
 import SelectCreatedItem from "../selectCreatedItem/SelectCreatedItem";
 import useInfoQuery from "../../hooks/useInfoQuery";
-import { ChangeEvent } from "react";
-import { IPaintingsType } from "../cards/Cards";
+import { IAuthor, ILocation, IPaintingsType } from "../../types";
 import Pagination from "../pagination/Pagination";
 import { Theme, useTheme } from "../../context/ThemeContext";
-export interface ISelectValues {
-  value: string;
-  label: string;
-}
-export interface IAuthor {
-  id: number;
-  name: string;
-}
-export interface ILocation {
-  id: number;
-  location: string;
-}
 
-const SelectItems = () => {
+function SelectItems() {
   const {
     authors,
     locations,
@@ -32,6 +20,10 @@ const SelectItems = () => {
     limit,
     allPaintings,
   } = useInfoQuery();
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filters]);
 
   const { theme } = useTheme();
 
@@ -48,14 +40,13 @@ const SelectItems = () => {
     const paintingName: string = event.target.value.trim();
     const foundPainting = allPaintings.find(
       (painting: IPaintingsType) =>
-        painting.name.toLowerCase() === paintingName.toLowerCase()
+        painting.name.toLowerCase() === paintingName.toLowerCase(),
     );
     if (foundPainting) {
       setFilters((prevFilter) => ({
         ...prevFilter,
         name: foundPainting.name,
       }));
-      setCurrentPage(1);
     }
     if (paintingName.trim().length === 0) {
       setFilters((prevFilter) => ({
@@ -65,53 +56,61 @@ const SelectItems = () => {
     }
   };
 
-  const handleAuthorChange = (value: string | null) => {
-    if (value !== null) {
-      const selectedAuthorID: number = authors.find(
-        (author: IAuthor) => author.name === value
-      ).id;
-      setFilters((prevFilter) => ({
-        ...prevFilter,
-        authorId: selectedAuthorID,
-      }));
-      setCurrentPage(1);
-    } else {
-      setFilters((prevFilter) => ({
-        ...prevFilter,
-        authorId: undefined,
-      }));
-    }
-  };
+  const handleAuthorChange = useCallback(
+    (value: string | null) => {
+      if (value !== null) {
+        const selectedAuthorID: number = authors.find(
+          (author: IAuthor) => author.name === value,
+        ).id;
+        setFilters((prevFilter) => ({
+          ...prevFilter,
+          authorId: selectedAuthorID,
+        }));
+      } else {
+        setFilters((prevFilter) => ({
+          ...prevFilter,
+          authorId: undefined,
+        }));
+      }
+    },
+    [authors, filters, currentPage],
+  );
 
-  const handleLocationChange = (value: string | null) => {
-    if (value !== null) {
-      const selectedLocationID: number = locations.find(
-        (location: ILocation) => location.location === value
-      ).id;
-      setFilters((prevFilter) => ({
-        ...prevFilter,
-        locationId: selectedLocationID,
-      }));
-    } else {
-      setFilters((prevFilter) => ({
-        ...prevFilter,
-        locationId: undefined,
-      }));
-    }
-  };
+  const handleLocationChange = useCallback(
+    (value: string | null) => {
+      if (value !== null) {
+        const selectedLocationID: number = locations.find(
+          (location: ILocation) => location.location === value,
+        ).id;
+        setFilters((prevFilter) => ({
+          ...prevFilter,
+          locationId: selectedLocationID,
+        }));
+        setCurrentPage(1);
+      } else {
+        setFilters((prevFilter) => ({
+          ...prevFilter,
+          locationId: undefined,
+        }));
+      }
+    },
+    [locations, filters, currentPage],
+  );
 
   const authorsArray =
-    authors?.map((author: IAuthor) => {
-      return { value: author.name, label: author.name };
-    }) || [];
+    authors?.map((author: IAuthor) => ({
+      value: author.name,
+      label: author.name,
+    })) || [];
 
   const locationsArray =
-    locations?.map((location: ILocation) => {
-      return { value: location.location, label: location.location };
-    }) || [];
+    locations?.map((location: ILocation) => ({
+      value: location.location,
+      label: location.location,
+    })) || [];
 
   return (
-    <>
+    <div className={st.wrapper}>
       <div className={st.selectsDisplay}>
         <input
           className={`${st.input} ${
@@ -123,16 +122,16 @@ const SelectItems = () => {
           onChange={handleNameChange}
         />
         <SelectItem
-          name={"Author"}
+          name="Author"
           options={authorsArray}
           handleChangeFunc={(value) => handleAuthorChange(value)}
         />
         <SelectItem
-          name={"Location"}
+          name="Location"
           options={locationsArray}
           handleChangeFunc={(value) => handleLocationChange(value)}
         />
-        <SelectCreatedItem name={"Created"} setFilters={setFilters} />
+        <SelectCreatedItem name="Created" setFilters={setFilters} />
       </div>
       <Pagination
         currentPage={currentPage}
@@ -140,7 +139,7 @@ const SelectItems = () => {
         filters={filters}
         totalPaintings={totalPaintings}
       />
-    </>
+    </div>
   );
-};
+}
 export default SelectItems;

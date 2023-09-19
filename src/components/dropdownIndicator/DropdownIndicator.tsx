@@ -1,9 +1,6 @@
-import { DropdownIndicatorProps, components } from "react-select";
+import { components } from "react-select";
+import { DropdownProps } from "../../types";
 import { useTheme } from "../../context/ThemeContext";
-
-export interface DropdownProps extends DropdownIndicatorProps {
-  isDropdownOpen: boolean;
-}
 
 const DropdownIndicator: React.FC<DropdownProps> = (props) => {
   const { lightThemeThenBlack } = useTheme();

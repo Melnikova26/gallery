@@ -1,11 +1,5 @@
 import { createContext, useContext, useState, ReactNode } from "react";
-
-interface ThemeContextType {
-  theme: string;
-  lightThemeThenBlack: string;
-  lightThemeThenWhite: string;
-  toggleTheme: () => void;
-}
+import { ThemeContextType } from "../types";
 
 export enum Theme {
   light = "light",
@@ -25,14 +19,13 @@ interface ThemeProviderProps {
   children: ReactNode;
 }
 
-export const ThemeProvider = ({ children }: ThemeProviderProps) => {
+export function ThemeProvider({ children }: ThemeProviderProps) {
   const [theme, setTheme] = useState(Theme.light);
 
   const toggleTheme = () => {
     setTheme((prevTheme) =>
-      prevTheme === Theme.light ? Theme.dark : Theme.light
+      prevTheme === Theme.light ? Theme.dark : Theme.light,
     );
-    console.log("heloooow");
   };
 
   const lightThemeThenBlack = theme === Theme.light ? "#000" : "#fff";
@@ -45,4 +38,4 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
       {children}
     </ThemeContext.Provider>
   );
-};
+}

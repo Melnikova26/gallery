@@ -1,12 +1,12 @@
 import { useQuery } from "react-query";
+import { useState } from "react";
 import {
   getAllPaintings,
   getAuthors,
   getLocations,
   getPaintings,
 } from "../services/fetcher";
-import { useState } from "react";
-import { ParamsType } from "../services/fetcher";
+import { ParamsType } from "../types";
 
 const useInfoQuery = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -20,12 +20,7 @@ const useInfoQuery = () => {
     staleTime: 1000 * 5,
   });
 
-  const {
-    data: paintings,
-    isLoading,
-    isSuccess,
-    isPreviousData,
-  } = useQuery({
+  const { data: paintings, isPreviousData } = useQuery({
     queryFn: () => getPaintings(currentPage, limit, filters),
     queryKey: ["paintings", filters, currentPage],
     staleTime: 1000 * 5,
@@ -46,16 +41,10 @@ const useInfoQuery = () => {
 
   return {
     authors,
-    paintings: paintings?.data,
-    totalPaintings: paintings?.totalPaintings,
-    data: paintings,
     limit,
     locations,
-    isLoading,
-    isSuccess,
     currentPage,
     setCurrentPage,
-    isPreviousData,
     filters,
     setFilters,
     allPaintings,

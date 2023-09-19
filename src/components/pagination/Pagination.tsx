@@ -1,34 +1,74 @@
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
 import useInfoQuery from "../../hooks/useInfoQuery";
 import PageButton from "../pageButton/PageButton";
 import Cards from "../cards/Cards";
-import { ParamsType } from "../../services/fetcher";
-import st from "./Pagination.module.scss";
-import Spinner from "../spinner/Spinner";
+import { getPaintings } from "../../services/fetcher";
 import { Theme, useTheme } from "../../context/ThemeContext";
+import Spinner from "../spinner/Spinner";
+import ErrorMessage from "../errorMessage/ErrorMessage";
+import { IPaginationProps } from "../../types";
 
-interface IPaginationProps {
-  currentPage: number;
-  filters?: ParamsType;
-  setCurrentPage: Function;
-  totalPaintings: number;
-}
+import st from "./Pagination.module.scss";
+
 const Pagination: React.FC<IPaginationProps> = ({
   currentPage,
   setCurrentPage,
   filters,
   totalPaintings,
 }) => {
-  const { limit, isPreviousData, isLoading } = useInfoQuery();
+  const [totalPage, setTotalPage] = useState(0);
+  const [buttonsToRender, setButtonsToRender] = useState([0]);
+  const { limit } = useInfoQuery();
 
   const { theme } = useTheme();
 
   const themeColor = theme === Theme.light ? st.light : st.dark;
 
-  const totalPage = useMemo(
-    () => totalPaintings && Math.ceil(totalPaintings / limit),
-    [totalPaintings, limit]
+  const {
+    data: paintings,
+    isLoading,
+    isError,
+    isSuccess,
+    isPreviousData,
+  } = useQuery(
+    ["paintings", currentPage, filters],
+    () => getPaintings(currentPage, limit, filters),
+    {
+      staleTime: 1000 * 5,
+    },
   );
+
+  useEffect(() => {
+    if (totalPaintings) {
+      const newTotalPage = Math.ceil(totalPaintings / limit);
+      setTotalPage(newTotalPage);
+    }
+  }, [totalPaintings, limit, filters, totalPage]);
+
+  useEffect(() => {
+    const maxButtons = 3;
+    const middleButton = Math.ceil(maxButtons / 2);
+
+    let newButtonsToRender: number[] = [];
+
+    if (totalPage <= 2) {
+      newButtonsToRender.length = totalPage;
+      for (let i = 0; i < totalPage; i++) {
+        newButtonsToRender[i] = i + 1;
+      }
+    } else {
+      const lastPage = Math.min(currentPage + middleButton - 1, totalPage);
+      const firstPage = Math.max(lastPage - maxButtons + 1, 1);
+
+      newButtonsToRender = Array.from(
+        { length: maxButtons },
+        (_, index) => firstPage + index,
+      );
+    }
+
+    setButtonsToRender(newButtonsToRender);
+  }, [currentPage, totalPage]);
 
   const lastPage = () => setCurrentPage(totalPage);
 
@@ -40,25 +80,6 @@ const Pagination: React.FC<IPaginationProps> = ({
   const prevPage = () => {
     setCurrentPage((prevCurrentPage: number) => prevCurrentPage - 1);
   };
-
-  const maxButtons = 3;
-  const middleButton = Math.ceil(maxButtons / 2);
-  let buttonsToRender = Array.from(
-    { length: maxButtons },
-    (_, index) => currentPage - middleButton + index + 1
-  );
-
-  if (currentPage <= middleButton) {
-    buttonsToRender = Array.from(
-      { length: maxButtons },
-      (_, index) => index + 1
-    );
-  } else if (currentPage >= totalPage - middleButton + 1) {
-    buttonsToRender = Array.from(
-      { length: maxButtons },
-      (_, index) => totalPage - maxButtons + index + 1
-    );
-  }
 
   const nav = (
     <nav className={st.nav}>
@@ -102,10 +123,17 @@ const Pagination: React.FC<IPaginationProps> = ({
     </nav>
   );
 
+  if (isLoading && !isSuccess) {
+    return <Spinner />;
+  }
+
+  if (isError) {
+    return <ErrorMessage />;
+  }
+
   return (
     <>
-      {isLoading && <Spinner />}
-      <Cards currentPage={currentPage} limit={limit} filters={filters} />
+      <Cards paintings={paintings} />
       {nav}
     </>
   );

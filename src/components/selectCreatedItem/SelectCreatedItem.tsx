@@ -1,26 +1,8 @@
-import Select, {
-  DropdownIndicatorProps,
-  StylesConfig,
-  components,
-} from "react-select";
-import ValueType from "react-select";
-import st from "./SelectCreatedItem.module.scss";
-import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { ParamsType } from "../../services/fetcher";
+import { ChangeEvent, useEffect, useState } from "react";
+import { ISelectCreatedProps, ParamsType } from "../../types";
 import { Theme, useTheme } from "../../context/ThemeContext";
 
-interface ISelectCreatedProps {
-  name: string;
-  setFilters: Function;
-}
-interface IValuesInput {
-  from: number | string;
-  to: number | string;
-}
-interface ISelect {
-  label: string;
-  value: string;
-}
+import st from "./SelectCreatedItem.module.scss";
 
 const SelectCreatedItem: React.FC<ISelectCreatedProps> = ({
   name,
@@ -120,7 +102,7 @@ const SelectCreatedItem: React.FC<ISelectCreatedProps> = ({
               value={fromValue}
               onChange={handleInputChange}
             />
-            <div className={`${st.minus} ${themeColor}`}></div>
+            <div className={`${st.minus} ${themeColor}`} />
             <input
               className={st.to}
               type="number"

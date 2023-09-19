@@ -1,16 +1,5 @@
 import axios from "axios";
-
-export interface ParamsType {
-  name?: string;
-  authorId?: number;
-  locationId?: number;
-  from?: number;
-  to?: number;
-}
-export interface QueryParamsType extends ParamsType {
-  _page: number;
-  _limit: number;
-}
+import { ParamsType } from "../types";
 
 export const baseURL = "https://test-front.framework.team";
 const client = axios.create({ baseURL });
@@ -33,7 +22,7 @@ export const getAllPaintings = async () => {
 export const getPaintings = async (
   page: number,
   limit: number,
-  filters?: ParamsType
+  filters?: ParamsType,
 ) => {
   const { from, to, ...otherFilters }: ParamsType = filters || {};
   const queryParams: Record<string, any> = {
@@ -43,11 +32,11 @@ export const getPaintings = async (
   };
 
   if (from) {
-    queryParams["created_gte"] = from;
+    queryParams.created_gte = from;
   }
 
   if (to) {
-    queryParams["created_lte"] = to;
+    queryParams.created_lte = to;
   }
   const otherFiltersKeys = Object.keys(otherFilters) as (keyof Omit<
     ParamsType,
@@ -59,17 +48,10 @@ export const getPaintings = async (
       delete queryParams[key];
     }
   }
+  const result = await client.get("/paintings", {
+    params: queryParams,
+  });
 
-  try {
-    const result = await client.get("/paintings", {
-      params: queryParams,
-    });
-
-    const totalPaintings = parseInt(result.headers["x-total-count"], 10);
-    console.log(totalPaintings);
-    return { data: result.data, totalPaintings };
-  } catch (error) {
-    console.error("Error fetching paintings:", error);
-    throw error;
-  }
+  const totalPaintings = parseInt(result.headers["x-total-count"], 10);
+  return { data: result.data, totalPaintings };
 };

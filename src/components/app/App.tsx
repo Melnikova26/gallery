@@ -1,14 +1,9 @@
 import { useContext, useState } from "react";
 import Header from "../header/Header";
 import SelectItems from "../selectItems/SelectItems";
-
-import st from "./App.module.scss";
 import { ThemeContext, Theme } from "../../context/ThemeContext";
 
-// export enum Theme {
-//   light = "light",
-//   dark = "dark",
-// }
+import st from "./App.module.scss";
 
 function App() {
   const { theme, toggleTheme } = useContext(ThemeContext);
