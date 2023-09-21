@@ -1,31 +1,47 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { ISelectCreatedProps, ParamsType } from "../../types";
 import { Theme, useTheme } from "../../context/ThemeContext";
+import DropdownArrowOpen from "../../dropdownArrow/DropdownArrowOpen";
+import DropDownArrowClose from "../../dropdownArrow/DropDownArrowClose";
 
 import st from "./SelectCreatedItem.module.scss";
 
 const SelectCreatedItem: React.FC<ISelectCreatedProps> = ({
-  name,
+  nameValue,
   setFilters,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [fromValue, setFromValue] = useState("");
   const [toValue, setToValue] = useState("");
-  const [selectValue, setSelectValue] = useState(name);
+  const [selectValue, setSelectValue] = useState(nameValue);
 
-  const { theme, lightThemeThenBlack } = useTheme();
+  const { theme } = useTheme();
+
+  const filtersRef = useRef<HTMLDivElement | null>(null);
 
   const themeColor = theme === Theme.light ? st.light : st.dark;
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if ((e.target as HTMLElement).closest(`.${st.filters}`)) {
+        toggleMenu();
+      }
+    };
+    document.addEventListener("click", handleClick);
+
+    return () => {
+      document.removeEventListener("click", handleClick);
+    };
+  }, []);
 
   useEffect(() => {
     if (fromValue || toValue) {
       setSelectValue(`${fromValue}-${toValue}`);
     } else {
-      setSelectValue(name);
+      setSelectValue(nameValue);
     }
     if (toValue.length === 4 && fromValue.length === 4) {
       toggleMenu();
@@ -54,41 +70,13 @@ const SelectCreatedItem: React.FC<ISelectCreatedProps> = ({
   };
 
   return (
-    <div className={st.filters} onClick={toggleMenu}>
+    <div className={st.filters}>
       <div
         className={`${isOpen ? st.select_open : st.select_close} ${themeColor}`}
       >
         <div className={`${st.header} ${themeColor}`}>{selectValue}</div>
-        <div className={st.dropDown}>
-          {isOpen ? (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="10"
-              height="6"
-              viewBox="0 0 10 6"
-              fill="none"
-            >
-              <path
-                d="M0.321395 4.1663L4.22936 0.314613C4.65497 -0.104871 5.34503 -0.104871 5.77064 0.314613L9.67861 4.1663C10.3652 4.84298 9.87892 6 8.90797 6L1.09203 6C0.121082 6 -0.365172 4.84298 0.321395 4.1663Z"
-                fill={lightThemeThenBlack}
-                fillOpacity="0.3"
-              />
-            </svg>
-          ) : (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="10"
-              height="6"
-              viewBox="0 0 10 6"
-              fill="none"
-            >
-              <path
-                d="M9.67861 1.8337L5.77064 5.68539C5.34503 6.10487 4.65497 6.10487 4.22936 5.68539L0.321394 1.8337C-0.365172 1.15702 0.121082 -8.36609e-08 1.09203 0L8.90797 6.7345e-07C9.87892 7.57111e-07 10.3652 1.15702 9.67861 1.8337Z"
-                fill={lightThemeThenBlack}
-                fillOpacity="0.3"
-              />
-            </svg>
-          )}
+        <div className={st.dropDown} onClick={toggleMenu}>
+          {isOpen ? <DropdownArrowOpen /> : <DropDownArrowClose />}
         </div>
         {isOpen && (
           <form className={`${st.menu} ${themeColor}`}>

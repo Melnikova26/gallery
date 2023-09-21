@@ -43,11 +43,12 @@ export const getPaintings = async (
     "from" | "to"
   >)[];
 
-  for (const key of otherFiltersKeys) {
-    if (!otherFilters[key]) {
-      delete queryParams[key];
+  otherFiltersKeys.forEach((otherFilter) => {
+    if (!otherFilters[otherFilter]) {
+      delete queryParams[otherFilter];
     }
-  }
+  });
+
   const result = await client.get("/paintings", {
     params: queryParams,
   });

@@ -6,7 +6,7 @@ import {
   getLocations,
   getPaintings,
 } from "../services/fetcher";
-import { ParamsType } from "../types";
+import { IAuthor, ILocation, IPaintingsType, ParamsType } from "../types";
 
 const useInfoQuery = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -14,7 +14,7 @@ const useInfoQuery = () => {
 
   const limit = 12;
 
-  const { data: authors } = useQuery({
+  const { data: authors } = useQuery<IAuthor[]>({
     queryFn: () => getAuthors(),
     queryKey: ["authors"],
     staleTime: 1000 * 5,
@@ -27,14 +27,14 @@ const useInfoQuery = () => {
     keepPreviousData: true,
   });
 
-  const { data: allPaintings } = useQuery({
+  const { data: allPaintings } = useQuery<IPaintingsType[]>({
     queryFn: () => getAllPaintings(),
     queryKey: "allPaintings",
     staleTime: 1000 * 5,
     keepPreviousData: true,
   });
 
-  const { data: locations } = useQuery({
+  const { data: locations } = useQuery<ILocation[]>({
     queryFn: () => getLocations(),
     queryKey: ["locations"],
   });

@@ -1,4 +1,12 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useCallback,
+  useMemo,
+  useEffect,
+} from "react";
 import { ThemeContextType } from "../types";
 
 export enum Theme {
@@ -20,7 +28,21 @@ interface ThemeProviderProps {
 }
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
-  const [theme, setTheme] = useState(Theme.light);
+  const [theme, setTheme] = useState(() => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) {
+      return savedTheme;
+    }
+    return Theme.light;
+  });
+
+  const saveTheme = (newtheme: string) => {
+    localStorage.setItem("theme", newtheme);
+  };
+
+  useEffect(() => {
+    saveTheme(theme);
+  }, [theme]);
 
   const toggleTheme = () => {
     setTheme((prevTheme) =>
@@ -28,13 +50,26 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     );
   };
 
-  const lightThemeThenBlack = theme === Theme.light ? "#000" : "#fff";
-  const lightThemeThenWhite = theme === Theme.light ? "#fff" : "#0C0C0C";
+  const lightThemeThenBlack = useMemo(
+    () => (theme === Theme.light ? "#000" : "#fff"),
+    [theme],
+  );
+  const lightThemeThenWhite = useMemo(
+    () => (theme === Theme.light ? "#fff" : "#0C0C0C"),
+    [theme],
+  );
+  const contextValue = useMemo(
+    () => ({
+      theme,
+      toggleTheme,
+      lightThemeThenBlack,
+      lightThemeThenWhite,
+    }),
+    [theme],
+  );
 
   return (
-    <ThemeContext.Provider
-      value={{ theme, toggleTheme, lightThemeThenBlack, lightThemeThenWhite }}
-    >
+    <ThemeContext.Provider value={contextValue}>
       {children}
     </ThemeContext.Provider>
   );
