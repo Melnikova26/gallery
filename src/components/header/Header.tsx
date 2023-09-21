@@ -1,6 +1,7 @@
-import style from "./Header.module.scss";
 import { Theme } from "../../context/ThemeContext";
 import { HeaderProps } from "../../types";
+
+import style from "./Header.module.scss";
 
 const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => (
   <header className={style.items}>

@@ -1,13 +1,14 @@
 import { useQuery } from "react-query";
-import { ChangeEvent, useCallback, useEffect } from "react";
+import { ChangeEvent, useCallback, useEffect, useMemo } from "react";
 import SelectItem from "../selectItem/SelectItem";
-import st from "./SelectItems.module.scss";
 import { getPaintings } from "../../services/fetcher";
 import SelectCreatedItem from "../selectCreatedItem/SelectCreatedItem";
 import useInfoQuery from "../../hooks/useInfoQuery";
-import { IAuthor, ILocation, IPaintingsType } from "../../types";
+import { IAuthor, IPaintingsType } from "../../types";
 import Pagination from "../pagination/Pagination";
 import { Theme, useTheme } from "../../context/ThemeContext";
+
+import st from "./SelectItems.module.scss";
 
 function SelectItems() {
   const {
@@ -36,32 +37,37 @@ function SelectItems() {
 
   const totalPaintings = paintings?.totalPaintings || 0;
 
-  const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const paintingName: string = event.target.value.trim();
-    const foundPainting = allPaintings.find(
-      (painting: IPaintingsType) =>
-        painting.name.toLowerCase() === paintingName.toLowerCase(),
-    );
-    if (foundPainting) {
-      setFilters((prevFilter) => ({
-        ...prevFilter,
-        name: foundPainting.name,
-      }));
-    }
-    if (paintingName.trim().length === 0) {
-      setFilters((prevFilter) => ({
-        ...prevFilter,
-        name: undefined,
-      }));
-    }
-  };
+  const handleNameChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const paintingName: string = event.target.value.trim();
+      const foundPainting = allPaintings?.find(
+        (painting: IPaintingsType) =>
+          painting.name.toLowerCase() === paintingName.toLowerCase(),
+      );
+
+      if (foundPainting) {
+        setFilters((prevFilter) => ({
+          ...prevFilter,
+          name: foundPainting.name,
+        }));
+      }
+      if (paintingName.trim().length === 0) {
+        setFilters((prevFilter) => ({
+          ...prevFilter,
+          name: undefined,
+        }));
+      }
+    },
+    [filters, currentPage],
+  );
 
   const handleAuthorChange = useCallback(
     (value: string | null) => {
       if (value !== null) {
-        const selectedAuthorID: number = authors.find(
+        const selectedAuthorID: number | undefined = authors?.find(
           (author: IAuthor) => author.name === value,
-        ).id;
+        )?.id;
+
         setFilters((prevFilter) => ({
           ...prevFilter,
           authorId: selectedAuthorID,
@@ -79,9 +85,10 @@ function SelectItems() {
   const handleLocationChange = useCallback(
     (value: string | null) => {
       if (value !== null) {
-        const selectedLocationID: number = locations.find(
-          (location: ILocation) => location.location === value,
-        ).id;
+        const selectedLocationID: number | undefined = locations?.find(
+          (location) => location.location === value,
+        )?.id;
+
         setFilters((prevFilter) => ({
           ...prevFilter,
           locationId: selectedLocationID,
@@ -97,17 +104,23 @@ function SelectItems() {
     [locations, filters, currentPage],
   );
 
-  const authorsArray =
-    authors?.map((author: IAuthor) => ({
-      value: author.name,
-      label: author.name,
-    })) || [];
+  const authorsArray = useMemo(
+    () =>
+      authors?.map((author) => ({
+        value: author.name,
+        label: author.name,
+      })) || [],
+    [authors],
+  );
 
-  const locationsArray =
-    locations?.map((location: ILocation) => ({
-      value: location.location,
-      label: location.location,
-    })) || [];
+  const locationsArray = useMemo(
+    () =>
+      locations?.map((location) => ({
+        value: location.location,
+        label: location.location,
+      })) || [],
+    [locations],
+  );
 
   return (
     <div className={st.wrapper}>
@@ -131,7 +144,7 @@ function SelectItems() {
           options={locationsArray}
           handleChangeFunc={(value) => handleLocationChange(value)}
         />
-        <SelectCreatedItem name="Created" setFilters={setFilters} />
+        <SelectCreatedItem nameValue="Created" setFilters={setFilters} />
       </div>
       <Pagination
         currentPage={currentPage}

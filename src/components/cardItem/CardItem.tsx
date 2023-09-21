@@ -1,6 +1,8 @@
+import { useMemo } from "react";
 import useInfoQuery from "../../hooks/useInfoQuery";
 import { baseURL } from "../../services/fetcher";
-import { IAuthor, ILocation, IPaintingsType } from "../../types";
+import { IPaintingsType } from "../../types";
+
 import st from "./CardItem.module.scss";
 
 const CardItem: React.FC<Omit<IPaintingsType, "id">> = ({
@@ -12,12 +14,14 @@ const CardItem: React.FC<Omit<IPaintingsType, "id">> = ({
 }) => {
   const { locations, authors } = useInfoQuery();
 
-  const location: ILocation = locations.find(
-    (location: ILocation) => location.id === locationId,
+  const location = useMemo(
+    () => locations?.find((locationItem) => locationItem.id === locationId),
+    [locations],
   );
 
-  const author: IAuthor = authors.find(
-    (author: IAuthor) => author.id === authorId,
+  const author = useMemo(
+    () => authors?.find((authorOne) => authorOne.id === authorId),
+    [authors],
   );
 
   return (
@@ -27,13 +31,13 @@ const CardItem: React.FC<Omit<IPaintingsType, "id">> = ({
         <div className={st.name}>{name}</div>
         <div className={st.about}>
           <div className={st.text}>
-            <span>Author:</span> {author.name}
+            <span>Author:</span> {author?.name}
           </div>
           <div className={st.text}>
             <span>Created:</span> {created}
           </div>
           <div className={st.text}>
-            <span>Location:</span> {location.location}
+            <span>Location:</span> {location?.location}
           </div>
         </div>
       </div>

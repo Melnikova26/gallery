@@ -1,16 +1,9 @@
 import Select, { StylesConfig } from "react-select";
 import { useState } from "react";
-import { ISelectValues } from "../../types";
-import st from "./SelectItem.module.scss";
+import { ISelectItemProps } from "../../types";
 import CustomClearIndicator from "../customClearIndicator/CustomClearIndicator";
 import DropdownIndicator from "../dropdownIndicator/DropdownIndicator";
 import { Theme, useTheme } from "../../context/ThemeContext";
-
-interface ISelectItemProps {
-  name: string;
-  options: ISelectValues[];
-  handleChangeFunc: (value: string | null) => void;
-}
 
 const SelectItem: React.FC<ISelectItemProps> = ({
   name,
@@ -42,6 +35,20 @@ const SelectItem: React.FC<ISelectItemProps> = ({
       color: `${lightThemeThenBlack}`,
       "@media (min-width: 320px) and (max-width: 767px)": {
         fontSize: "0.875rem",
+      },
+      "&:hover": {
+        border: state.menuIsOpen
+          ? `1px solid ${lightThemeThenBlack}!important`
+          : `1px solid ${
+              theme === Theme.light ? "rgba(0, 0, 0, .30)" : "#fff"
+            }`,
+        borderBottom: `1px solid ${
+          theme === Theme.light
+            ? "rgba(0, 0, 0, .30)!important"
+            : state.menuIsOpen
+            ? "rgba(255, 255, 255, 0.30)!important"
+            : "#fff"
+        }`,
       },
     }),
     indicatorSeparator: (provided) => ({
@@ -102,7 +109,6 @@ const SelectItem: React.FC<ISelectItemProps> = ({
   return (
     <Select
       styles={customStyles}
-      className={`${st.select}`}
       placeholder={name}
       components={{
         DropdownIndicator: (props) => (

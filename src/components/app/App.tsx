@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import Header from "../header/Header";
 import SelectItems from "../selectItems/SelectItems";
 import { ThemeContext, Theme } from "../../context/ThemeContext";

@@ -60,7 +60,7 @@ export interface QueryParamsType extends ParamsType {
 }
 
 export interface ISelectCreatedProps {
-  name: string;
+  nameValue: string;
   setFilters: Function;
 }
 
@@ -75,4 +75,10 @@ export interface IPageButtonProps {
   page: number;
   setCurrentPage: Function;
   clazz: string;
+}
+
+export interface ISelectItemProps {
+  name: string;
+  options: ISelectValues[];
+  handleChangeFunc: (value: string | null) => void;
 }
