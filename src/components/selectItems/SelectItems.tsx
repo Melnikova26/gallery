@@ -50,6 +50,11 @@ function SelectItems() {
           ...prevFilter,
           name: foundPainting.name,
         }));
+      } else {
+        setFilters((prevFilter) => ({
+          ...prevFilter,
+          name: "empty",
+        }));
       }
       if (paintingName.trim().length === 0) {
         setFilters((prevFilter) => ({

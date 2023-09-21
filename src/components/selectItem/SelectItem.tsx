@@ -104,6 +104,10 @@ const SelectItem: React.FC<ISelectItemProps> = ({
       ...provided,
       padding: "2px 10px 2px 15px",
     }),
+    singleValue: (provided) => ({
+      ...provided,
+      color: lightThemeThenBlack,
+    }),
   };
 
   return (

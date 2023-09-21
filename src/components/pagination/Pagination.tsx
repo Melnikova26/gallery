@@ -133,7 +133,7 @@ const Pagination: React.FC<IPaginationProps> = ({
 
   return (
     <>
-      <Cards paintings={paintings} />
+      {filters?.name !== "empty" ? <Cards paintings={paintings} /> : null}
       {nav}
     </>
   );
