@@ -1,0 +1,125 @@
+.select_close {
+  height: 2.8125rem;
+  padding: 0.94rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+  &.dark {
+    border: 1px solid #fff;
+    background-color: #0c0c0c;
+  }
+  &.light {
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    background-color: #fff;
+  }
+}
+.select_open {
+  height: 2.8125rem;
+  padding: 0.94rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 0.5rem;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom: none !important;
+  transition: all 0.2s ease;
+  &.dark {
+    border: 1px solid #fff;
+    background-color: #0c0c0c;
+  }
+  &.light {
+    border: 1px solid #000;
+    background-color: #fff;
+  }
+}
+.filters {
+  position: relative;
+}
+.dropDown {
+  display: flex;
+  align-items: center;
+}
+.header {
+  font-size: 0.8125rem;
+  &.dark {
+    color: #fff;
+  }
+  &.light {
+    color: #000;
+  }
+}
+
+.menu {
+  width: 100%;
+  height: fit-content;
+  padding: 1.25rem 1.3rem;
+  position: absolute;
+  bottom: -99%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.63rem;
+  justify-content: space-between;
+  align-items: center;
+  top: 100%;
+  left: 0;
+  border-top: none !important;
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+  z-index: 5;
+  transition: all 0.2s ease;
+  &.dark {
+    background-color: #0c0c0c;
+    border: 1px solid #fff;
+  }
+  &.light {
+    background-color: #fff;
+    border: 1px solid #000;
+  }
+}
+.from,
+.to {
+  min-width: 5.9rem;
+  max-width: 6.875rem;
+  height: 2.8125rem;
+  padding: 0.94rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: #efefef;
+}
+.minus {
+  width: 0.75rem;
+  height: 0.0625rem;
+  padding: 0.03125rem 0.375rem;
+  &.dark {
+    background-color: #fff;
+  }
+  &.light {
+    background-color: #000;
+  }
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+@media (max-width: 1380px) {
+  .menu {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 378px) {
+  .menu {
+    flex-direction: row;
+  }
+}
+@media (min-width: 320px) and (max-width: 767px) {
+  .header {
+    font-size: 0.875rem;
+  }
+}

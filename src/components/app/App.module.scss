@@ -1,0 +1,22 @@
+.containerDark,
+.containerLight {
+  width: 100%;
+  min-height: 100vh;
+  padding: 2.19rem 0 6.06rem;
+}
+
+.containerLight {
+  background-color: #fff;
+}
+
+.containerDark {
+  background-color: #000;
+}
+
+.app {
+  width: 90%;
+  min-height: 85vh;
+  margin: 0 auto;
+  display: grid;
+  grid-auto-rows: 72px 1fr;
+}
